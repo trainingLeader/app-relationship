@@ -1,8 +1,7 @@
 package com.asociacionesapp.app_relationship.entities;
 
 import java.util.List;
-
-import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails.Address;
+import java.util.*;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -23,9 +22,9 @@ public class Client {
     private String name;
     private String lastname;
 
-    // @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    // @JoinColumn(name = "client_id")
-    // private List<Address> addresses;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "client_id_address")
+    private List<Address> addresses = new ArrayList<>();
 
     public Client() {
     }
@@ -58,6 +57,12 @@ public class Client {
                 ", name=" + name +
                 ", lastname=" + lastname +
                 "}";
+    }
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
+    }
+    public List<Address> getAddresses() {
+        return addresses;
     }
 
 }
