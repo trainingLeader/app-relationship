@@ -23,9 +23,9 @@ public class Client {
     private String name;
     private String lastname;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "client_id")
-    private List<Address> addresses;
+    // @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    // @JoinColumn(name = "client_id")
+    // private List<Address> addresses;
 
     public Client() {
     }
@@ -57,7 +57,7 @@ public class Client {
         return "{id=" + id +
                 ", name=" + name +
                 ", lastname=" + lastname +
-                ", addresses=" + addresses + "}";
+                "}";
     }
 
 }
