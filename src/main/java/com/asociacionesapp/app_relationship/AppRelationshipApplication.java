@@ -1,6 +1,5 @@
 package com.asociacionesapp.app_relationship;
 
-import java.util.Optional;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,23 +32,105 @@ public class AppRelationshipApplication  implements CommandLineRunner{
 
 	}
 	@Transactional
-	public void oneToManyFindById() {
-		Optional<Client> optionalClient = clientRepository.findById(2L);
+	public void oneToManyInvoiceBidireccionalFindById() {
+		Optional<Client> optionalClient = clientRepository.findOne(1L);
+
 		optionalClient.ifPresent(client -> {
-			Address address1 = new Address("El verjel", 1234);
-			Address address2 = new Address("Vasco de Gama", 9875);
 	
-			client.setAddresses(Arrays.asList(address1, address2));
+			Invoice invoice1 = new Invoice("compras de la casa", 5000L);
+			Invoice invoice2 = new Invoice("compras de oficina", 8000L);
+	
+			client.addInvoice(invoice1).addInvoice(invoice2);
 	
 			clientRepository.save(client);
 	
 			System.out.println(client);
 		});
-		
 	}
 
 	@Transactional
-	public void oneToMany(){
+	public void oneToManyInvoiceBidireccional() {
+		Client client = new Client("Fran", "Moras");
+
+		Invoice invoice1 = new Invoice("compras de la casa", 5000L);
+		Invoice invoice2 = new Invoice("compras de oficina", 8000L);
+
+		client.addInvoice(invoice1).addInvoice(invoice2);
+
+		clientRepository.save(client);
+
+		System.out.println(client);
+	}
+
+	@Transactional
+	public void removeAddressFindById() {
+		Optional<Client> optionalClient = clientRepository.findById(2L);
+		optionalClient.ifPresent(client -> {
+			Address address1 = new Address("El verjel", 1234);
+			Address address2 = new Address("Vasco de Gama", 9875);
+
+			Set<Address> addresses = new HashSet<>();
+			addresses.add(address1);
+			addresses.add(address2);
+			client.setAddresses(addresses);
+
+			clientRepository.save(client);
+
+			System.out.println(client);
+
+			Optional<Client> optionalClient2 = clientRepository.findOneWithAddresses(2L);
+			optionalClient2.ifPresent(c -> {
+				c.getAddresses().remove(address2);
+				clientRepository.save(c);
+				System.out.println(c);
+			});
+		});
+
+	}
+
+	@Transactional
+	public void removeAddress() {
+		Client client = new Client("Fran", "Moras");
+
+		Address address1 = new Address("El verjel", 1234);
+		Address address2 = new Address("Vasco de Gama", 9875);
+
+		client.getAddresses().add(address1);
+		client.getAddresses().add(address2);
+
+		clientRepository.save(client);
+
+		System.out.println(client);
+
+		Optional<Client> optionalClient = clientRepository.findById(3L);
+		optionalClient.ifPresent(c -> {
+			c.getAddresses().remove(address1);
+			clientRepository.save(c);
+			System.out.println(c);
+		});
+	}
+
+	@Transactional
+	public void oneToManyFindById() {
+		Optional<Client> optionalClient = clientRepository.findById(2L);
+		optionalClient.ifPresent(client -> {
+			Address address1 = new Address("El verjel", 1234);
+			Address address2 = new Address("Vasco de Gama", 9875);
+
+			Set<Address> addresses = new HashSet<>();
+			addresses.add(address1);
+			addresses.add(address2);
+			client.setAddresses(addresses);
+
+			clientRepository.save(client);
+
+			System.out.println(client);
+		});
+
+	}
+
+	@Transactional
+	public void oneToMany() {
 		Client client = new Client("Fran", "Moras");
 
 		Address address1 = new Address("El verjel", 1234);
@@ -77,7 +158,7 @@ public class AppRelationshipApplication  implements CommandLineRunner{
 
 	@Transactional
 	public void manyToOneFindByIdClient() {
-		
+
 		Optional<Client> optionalClient = clientRepository.findById(1L);
 
 		if (optionalClient.isPresent()) {

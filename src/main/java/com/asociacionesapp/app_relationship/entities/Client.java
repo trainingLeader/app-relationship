@@ -31,7 +31,11 @@ public class Client {
         inverseJoinColumns = @JoinColumn(name = "address_id"),
         uniqueConstraints = @UniqueConstraint(columnNames = {"address_id"})
     )
-    private List<Address> addresses = new ArrayList<>();
+    private Set<Address> addresses = new HashSet<>();
+
+    //Aplicacion relacion bidireccional
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy="client")
+    private Set<Invoice> invoices = new HashSet<>();
 
     public Client() {}
 
@@ -58,18 +62,32 @@ public class Client {
         this.lastname = lastname;
     }
 
+    public Set<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(Set<Address> addresses) {
+        this.addresses = addresses;
+    }
+    public Set<Invoice> getInvoices() {
+        return invoices;
+    }
+
+    public void setInvoices(Set<Invoice> invoices) {
+        this.invoices = invoices;
+    }
+
+    public Client addInvoice(Invoice invoice) {
+        invoices.add(invoice);
+        invoice.setClient(this);
+        return this;
+    }
     @Override
     public String toString() {
         return "{id=" + id +
                 ", name=" + name +
                 ", lastname=" + lastname +
                 "}";
-    }
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
-    }
-    public List<Address> getAddresses() {
-        return addresses;
     }
 
 }
